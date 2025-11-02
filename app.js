@@ -988,6 +988,9 @@
     if(typeof window !== 'undefined'){
       window._debug = window._debug || {};
       Object.assign(window._debug, {
+        registerAccount: registerAccount,
+        loginAccount: loginAccount,
+        logoutAccount: logoutAccount,
         saveToAccount: saveToAccount,
         loadFromAccount: loadFromAccount,
         firebaseDB: () => firebaseDB,
