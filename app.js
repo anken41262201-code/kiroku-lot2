@@ -103,16 +103,22 @@
     templates.forEach(t => { (t.subjects||[]).forEach(s => { if(s && s.name) existing.add(s.name); }); });
     // 既存テストの教科から収集
     testRecords.forEach(t => { (t.subjects||[]).forEach(s => { if(s && s.name) existing.add(s.name); }); });
-    // 現在の選択を保持
-    const cur = els.newSubjectName.value;
-    els.newSubjectName.innerHTML = '<option value="">教科を選択...</option>';
-    Array.from(existing).sort().forEach(name => {
-      if(!name) return;
-      const opt = document.createElement('option');
-      opt.value = name; opt.textContent = name;
-      els.newSubjectName.appendChild(opt);
-    });
-    if(cur) els.newSubjectName.value = cur;
+    // If newSubjectName is an input (with datalist), populate datalist; if it's a select, populate options
+    const el = els.newSubjectName;
+    const names = Array.from(existing).sort();
+    if(el.tagName === 'INPUT'){
+      // find datalist by id from element's list attribute or fallback to 'subjectNameOptions'
+      const listId = el.getAttribute('list') || 'subjectNameOptions';
+      let dl = document.getElementById(listId);
+      if(!dl){ dl = document.createElement('datalist'); dl.id = listId; el.parentNode && el.parentNode.appendChild(dl); }
+      dl.innerHTML = '';
+      names.forEach(name => { if(!name) return; const opt = document.createElement('option'); opt.value = name; dl.appendChild(opt); });
+    } else {
+      const cur = el.value;
+      el.innerHTML = '<option value="">教科を選択...</option>';
+      names.forEach(name => { if(!name) return; const opt = document.createElement('option'); opt.value = name; opt.textContent = name; el.appendChild(opt); });
+      if(cur) el.value = cur;
+    }
   }
 
   // 現在のテスト名に対応するテンプレートがあればテンプレートの教科を現在のテストに合わせて更新する
@@ -1196,6 +1202,16 @@
       else if(testRecords.length) currentTestId = testRecords[0].id;
     }catch(e){ if(testRecords.length) currentTestId = testRecords[0].id; }
   bind(); refreshTestSelect(); refreshTemplateSelect(); renderBoard();
+  // If we're showing the tile grid on the home page, hide the main scoreboard/compare UI there
+  try{
+    const grid = document.getElementById('testsGrid');
+    const isIndex = /index\.html?$/.test(window.location.pathname) || window.location.pathname === '/' || window.location.pathname.endsWith('/');
+    if(grid && isIndex){
+      const scoreboard = document.querySelector('.scoreboard'); if(scoreboard) scoreboard.style.display = 'none';
+      const compare = document.querySelector('.compare-card'); if(compare) compare.style.display = 'none';
+      const chart = document.querySelector('.chart-card'); if(chart) chart.style.display = 'none';
+    }
+  }catch(e){}
   // 初期化時に教科候補を反映
   refreshSubjectNameOptions();
   // Firebase があれば初期化を行う

@@ -104,7 +104,8 @@
       </table>
 
       <div class="add-subject">
-        <input id="newSubjectName" placeholder="教科名を入力（例：数学）" />
+        <input id="newSubjectName" placeholder="教科名を入力（例：数学）" list="subjectNameOptions" />
+        <datalist id="subjectNameOptions"></datalist>
         <input id="newSubjectScore" placeholder="点数" type="number" min="0" max="100" />
         <button id="addSubjectBtn" class="btn">教科を追加</button>
       </div>

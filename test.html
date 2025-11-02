@@ -41,9 +41,22 @@
       </table>
 
       <div class="add-subject">
-        <input id="newSubjectName" placeholder="教科名を入力（例：数学）" />
+        <input id="newSubjectName" placeholder="教科名を入力（例：数学）" list="subjectNameOptions" />
+        <datalist id="subjectNameOptions"></datalist>
         <input id="newSubjectScore" placeholder="点数" type="number" min="0" max="100" />
         <button id="addSubjectBtn" class="btn">教科を追加</button>
+      </div>
+
+      <div class="compare-card card" id="compareCard">
+        <h3>他の人のデータと比較</h3>
+        <div class="compare-controls">
+          <textarea id="pasteShared" placeholder="ここに共有された JSON 文字列 (または共有 URL) を貼り付け"></textarea>
+          <div class="compare-actions">
+            <button id="loadSharedBtn" class="btn">読み込みして比較</button>
+            <button id="saveSharedBtn" class="btn">読み込んだデータをテストとして保存</button>
+          </div>
+        </div>
+        <div id="compareResult"></div>
       </div>
 
       <div class="chart-card card" id="chartCard">
